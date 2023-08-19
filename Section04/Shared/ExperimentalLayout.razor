@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+@inject ILogger<ExperimentalLayout> Logger;
+
+<PageTitle>Section04 - Experimental</PageTitle>
+<div class="page">
+    <div class="sidebar">
+        <NavMenu/>
+    </div>
+
+    <main>
+        <div class="alert-danger">
+            This page is experimental.
+            <button class="btn btn-primary" @onclick="Upvote">Thumb Up (@_upvotes)</button>
+            <button class="btn btn-primary" @onclick="Downvote">Thumb Down (@_downvotes)</button>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+
+    <footer class="bg-dark text-center text-white fixed-bottom">
+        Copyright @DateTime.Now.Year
+    </footer>
+</div>

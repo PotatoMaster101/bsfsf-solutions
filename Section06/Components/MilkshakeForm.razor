@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Section06.Models
+
+<div class="text-success">
+    @_message
+</div>
+
+<EditForm Model="@_model" OnInvalidSubmit="HandleInvalidSubmit" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="form-group col-md-6">
+        <label for="name">Name:</label>
+        <InputText id="name" @bind-Value="_model.Name" />
+        <ValidationMessage For="() => _model.Name" />
+    </div>
+
+    <div class="form-group col-md-6">
+        <label for="quantity">Quantity:</label>
+        <InputNumber id="quantity" @bind-Value="_model.Quantity" />
+        <ValidationMessage For="() => _model.Quantity" />
+    </div>
+
+    <div class="form-group col-md-6">
+        <label for="name">Size:</label>
+        <InputSelect id="size" @bind-Value="_model.Size">
+            @foreach (var value in Enum.GetValues<MilkshakeSize>())
+            {
+                <option value="@value">@value</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => _model.Size" />
+    </div>
+
+    <div class="form-group col-md-6">
+        <label for="name">Type:</label>
+        <InputSelect id="type" @bind-Value="SelectedMilkshakeTypeId">
+            @foreach (var value in _milkshakeTypes)
+            {
+                <option value="@value.Id">@value.Name</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => _model.Type" />
+    </div>
+
+    <div class="form-group">
+        <label for="cream">Add Cream:</label>
+        <InputCheckbox id="cream" @bind-Value="_model.AddCream" />
+    </div>
+
+    <p>
+        <button class="btn btn-primary" type="submit">Order</button>
+    </p>
+</EditForm>

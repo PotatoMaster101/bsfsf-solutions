@@ -1,0 +1,29 @@
+﻿@page "/CreateUser"
+@using AutoMapper
+@using Section08.DataAccess.Dto
+@using Section08.DataAccess.Repositories
+@using Section08.Models
+
+@inject IMapper Mapper;
+@inject IUserRepository UserRepo;
+
+<PageTitle>Create User</PageTitle>
+<h3>Create User</h3>
+
+<div class="text-success">
+    @_message
+</div>
+
+<UserForm Model="_model" SubmitButtonText="Create" OnValidSubmit="HandleValidSubmit" />
+
+@code {
+    private string _message = string.Empty;
+    private readonly User _model = new();
+
+    private async Task HandleValidSubmit(User model)
+    {
+        await UserRepo.Add(Mapper.Map<User, UserDto>(model));
+        await UserRepo.Save();
+        _message = "User added";
+    }
+}

@@ -1,0 +1,12 @@
+﻿@page "/"
+@using Section05.Components
+
+<PageTitle>Users</PageTitle>
+<h1>User</h1>
+
+<div>
+    @foreach (var user in _users)
+    {
+        <UserComponent User="user" OnNameClick="NameChanged" />
+    }
+</div>

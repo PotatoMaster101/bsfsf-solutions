@@ -1,0 +1,19 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+
+<AuthorizeView Roles="admin">
+    <Authorized>
+        <a href="AdminOnly">Admin only page</a> <br />
+    </Authorized>
+</AuthorizeView>
+<AuthorizeView Roles="admin,employee">
+    <Authorized>
+        <a href="AdminAndEmployeeOnly">Admin and employee only page</a> <br />
+    </Authorized>
+</AuthorizeView>
+<AuthorizeView>
+    <Authorized>
+        <a href="LoggedInOnly">Logged in user only page</a> <br />
+    </Authorized>
+</AuthorizeView>
+<a href="AllAccess">All user page</a> <br />

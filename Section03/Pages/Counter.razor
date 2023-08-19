@@ -1,0 +1,15 @@
+﻿@page "/counter"
+@using Section03.Data
+@inject ICounterService CounterSrv;
+
+<PageTitle>Counter</PageTitle>
+<h1>Counter</h1>
+<p role="status">Current count: @CounterSrv.Count</p>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private void IncrementCount()
+    {
+        CounterSrv.Count++;
+    }
+}

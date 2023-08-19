@@ -1,0 +1,28 @@
+﻿@page "/PromoteUser"
+@using Section07.Services
+@inject IPromoteRoleService PromoteRoleService
+@inject IConfiguration Configuration
+
+<PageTitle>Promote User</PageTitle>
+<p>User promoted</p>
+
+@code {
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await Promote();
+    }
+
+    private async Task Promote()
+    {
+        // promote admin
+        var email = Configuration.GetValue<string>("AdminUser");
+        if (email is not null)
+            await PromoteRoleService.PromoteAdmin(email);
+
+        // promote employee
+        email = Configuration.GetValue<string>("EmployeeUser");
+        if (email is not null)
+            await PromoteRoleService.PromoteEmployee(email);
+    }
+}

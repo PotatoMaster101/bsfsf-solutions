@@ -1,0 +1,14 @@
+﻿@using Section05.Models
+
+@if (User is not null)
+{
+    <div>
+        @User.DisplayName
+        <button class="btn btn-primary" @onclick="ToggleNames">Fix</button>
+
+        @foreach (var name in User.DisplayNames)
+        {
+            <button class="btn btn-secondary" onclick="@(async () => await SetNewDisplayName(name))" hidden="@(!_showNames)">@name</button>
+        }
+    </div>
+}

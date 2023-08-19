@@ -1,0 +1,6 @@
+﻿@page "/AdminAndEmployeeOnly"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "admin,employee")]
+
+<PageTitle>Admin or Employee Only</PageTitle>
+<p>Success</p>

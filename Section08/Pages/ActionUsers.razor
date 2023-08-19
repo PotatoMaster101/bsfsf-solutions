@@ -1,0 +1,108 @@
+﻿@page "/ActionUsers"
+@using AutoMapper
+@using Section08.DataAccess.Dto
+@using Section08.DataAccess.Repositories
+@using Section08.Models
+
+@inject IMapper Mapper;
+@inject IUserRepository UserRepo;
+
+<PageTitle>Action Users</PageTitle>
+<h3>Action Users</h3>
+
+<div class="row">
+    <div class="@(_showUpdateForm ? "col-md-8" : string.Empty)">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date of Birth</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var user in _users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.DateOfBirth</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="async () => await HandleCopy(user)">Copy</button>
+                        <button class="btn btn-primary" @onclick="() => HandleUpdate(user)">Update</button>
+                        <button class="btn btn-danger" @onclick="async () => await HandleDelete(user)">Delete</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    @if (_showUpdateForm)
+    {
+        <div class="col-md-4">
+            <UserForm Model="_updateUser" SubmitButtonText="Update" OnValidSubmit="HandleUpdateValidSubmit" />
+        </div>
+    }
+</div>
+
+@code {
+    private readonly List<User> _users = new();
+    private User _updateUser = default!;
+    private bool _showUpdateForm;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // populate users
+        var dto = UserRepo.Get().OrderBy(x => x.Id);
+        _users.Clear();
+        _users.AddRange(dto.Select(x => Mapper.Map<UserDto, User>(x)));
+    }
+
+    private async Task HandleCopy(User user)
+    {
+        var copy = user.Clone(false);
+        _users.Add(copy);
+
+        var added = await UserRepo.Add(Mapper.Map<User, UserDto>(copy));
+        await UserRepo.Save();
+        copy.Id = added.Id;
+    }
+
+    private void HandleUpdate(User user)
+    {
+        // show update form
+        _updateUser = user;
+        _showUpdateForm = true;
+    }
+
+    private async Task HandleDelete(User user)
+    {
+        _users.Remove(user);
+        var dto = await UserRepo.GetById(user.Id);
+        if (dto is not null)
+        {
+            await UserRepo.Delete(dto);
+            await UserRepo.Save();
+        }
+    }
+
+    private async Task HandleUpdateValidSubmit(User user)
+    {
+        _showUpdateForm = false;
+
+        // save updated data
+        var dto = await UserRepo.GetById(user.Id);
+        if (dto is not null)
+        {
+            Mapper.Map(user, dto);
+            await UserRepo.UpdateAndSave(dto);
+        }
+    }
+}
